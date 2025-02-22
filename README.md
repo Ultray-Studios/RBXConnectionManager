@@ -10,12 +10,15 @@ RBXConnectionManager is a lightweight and efficient module for managing `RBXScri
 - **Monitoring**: Logs and displays event calls along with timestamps.
 - **Self-Destruction**: Provides a method to completely clean up the manager.
 
+---
+
 ## Installation
 1. Add `RBXConnectionManager.lua` to your Roblox project.
 2. Require the module where needed:
    ```lua
    local RBXConnectionManager = require(path.to.RBXConnectionManager)
    ```
+---
 
 ## Usage
 
@@ -57,6 +60,11 @@ connectionManager:GetAllMonitoringData()
 ```lua
 connectionManager:Destroy()
 ```
+
+### Automatic Player Cleanup
+If you include a player's UserId into the event name, it will clean it self up automatically
+
+---
 
 ## Notes
 - On the **server-side**, connections linked to a player will be automatically removed when they leave.
