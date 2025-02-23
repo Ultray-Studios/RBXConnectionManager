@@ -1,6 +1,6 @@
 {
     "name": "rbxconnectionmanager",
     "tree": {
-        "$path": "src/RBXConnectionManager.luau"
+        "$path": "src"
     }
 }
