@@ -61,15 +61,14 @@ connectionManager:GetAllMonitoringData()
 connectionManager:Destroy()
 ```
 
-### Automatic Player Cleanup
-If you include a player's UserId into the event name, it will clean it self up automatically
-
 ---
 
 ## Notes
 - On the **server-side**, connections linked to a player will be automatically removed when they leave.
 - Monitoring can be useful for debugging event calls, but it may have performance implications if used excessively.
 - The module is designed to work efficiently in both **server-side** and **client-side** scripts.
+
+---
 
 ## Open-source
 This module is open-source and free to use in any Roblox project. Contributions and improvements are welcome!
