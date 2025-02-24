@@ -20,7 +20,7 @@ RBXConnectionManager is a lightweight and efficient module for managing `RBXScri
 1. Add `RBXConnectionManager.lua` to your Roblox project.
 2. Require the module where needed:
    ```lua
-   local RBXConnectionManager = require(path.to.RBXConnectionManager)
+   local RBXConnectionManager = require(path.to.rbxconnectionmanager)
    ```
 ---
 
