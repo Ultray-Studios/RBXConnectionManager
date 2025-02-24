@@ -1,5 +1,7 @@
 # RBXConnectionManager
 
+This is our first open-source release. Please add a ⭐ if you like the idea of this project or if you like to use it.
+
 ## Overview
 RBXConnectionManager is a lightweight and efficient module for managing `RBXScriptConnection` objects in Roblox. It allows for easy connection handling, automatic cleanup, and optional event monitoring.
 
