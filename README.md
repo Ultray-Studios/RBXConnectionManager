@@ -42,8 +42,9 @@ connectionManager:Disconnect("ExampleConnection")
 ```
 
 ### Disconnecting All Connections in a Group
+This will disconnect all events that contain the provided string in their name.
 ```lua
-connectionManager:DisconnectAllInGroup(tostring(player.UserId))
+connectionManager:DisconnectAllInGroup("OnCarShowClicked")
 ```
 
 ### Disconnecting All Connections
@@ -59,6 +60,29 @@ connectionManager:GetAllMonitoringData()
 ### Destroying the Manager
 ```lua
 connectionManager:Destroy()
+```
+
+---
+
+### Basic Example (Car Show)
+
+```lua
+local Players = game:GetService("Players")
+local RBXConnectionManager = require(game.ServerScriptService.RBXConnectionManager)
+
+-- Create a new connection manager
+local connectionManager = RBXConnectionManager.new()
+
+-- Example RemoteEvent
+local remoteEvent = game.ReplicatedStorage.SomeRemoteEvent
+
+-- Connect an event with automatic tracking
+Players.PlayerAdded:Connect(function(playerObj)
+    local userid = playerObj.UserId
+	connectionManager:Connect("OnCarShowClicked_" .. tostring(userid), remoteEvent.OnServerEvent, function(triggeringPlayer, data)
+		print(triggeringPlayer.Name .. " triggered the event with data:", data)
+	end, true) -- Enable monitoring
+end)
 ```
 
 ---
