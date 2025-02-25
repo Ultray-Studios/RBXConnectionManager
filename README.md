@@ -4,6 +4,8 @@ This is our first open-source release. Please add a ⭐ if you like the idea of 
 
 Consider joining our community aswell! https://discord.gg/8ed3W53kHv/ to see progress on our very advanced projects and enjoy early-access benefits while you still can!
 
+DevForum Post: https://devforum.roblox.com/t/3503750
+
 ## Overview
 RBXConnectionManager is a lightweight and efficient module for managing `RBXScriptConnection` objects in Roblox. It allows for easy connection handling, automatic cleanup, and optional event monitoring.
 
@@ -17,7 +19,7 @@ RBXConnectionManager is a lightweight and efficient module for managing `RBXScri
 ---
 
 ## Installation
-1. Add `RBXConnectionManager.lua` to your Roblox project.
+1. Add `RBXConnectionManager.luau` to your Roblox project.
 2. Require the module where needed:
    ```lua
    local RBXConnectionManager = require(path.to.rbxconnectionmanager)
@@ -62,17 +64,18 @@ connectionManager:GetAllMonitoringData()
 ```
 
 ### Destroying the Manager
+This will also disconnect all existing connections (like connectionManager:DisconnectAll() does)
 ```lua
 connectionManager:Destroy()
 ```
 
 ---
 
-### Basic Example (Car Show)
+### Basic Example (Server-side Car Show Handler)
 
 ```lua
 local Players = game:GetService("Players")
-local RBXConnectionManager = require(game.ServerScriptService.RBXConnectionManager)
+local RBXConnectionManager = require(game.ServerScriptService.rbxconnectionmanager)
 
 -- Create a new connection manager
 local connectionManager = RBXConnectionManager.new()
@@ -85,6 +88,7 @@ Players.PlayerAdded:Connect(function(playerObj)
     local userid = playerObj.UserId
 	connectionManager:Connect("OnCarShowClicked_" .. tostring(userid), remoteEvent.OnServerEvent, function(triggeringPlayer, data)
 		print(triggeringPlayer.Name .. " triggered the event with data:", data)
+        warn("Send " .. triggeringPlayer.Name .. " congratulations about " .. triggeringPlayer.Name .. " clicking on his car show")
 	end, true) -- Enable monitoring
 end)
 ```
