@@ -25,7 +25,7 @@ function RBXConnectionManager.new(monitoring_checker_interval: number?, osdate_f
 end
 
 -- Add a connection
-function RBXConnectionManager:Connect(name: string, event, callback, monitoring: boolean?): RBXScriptConnection
+function RBXConnectionManager:Connect(name: string, event: RBXScriptSignal, callback, monitoring: boolean?): RBXScriptConnection
 	if self._connections[name] then
 		-- Disconnect and replace the existing connection
 		self:Disconnect(name)
