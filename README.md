@@ -11,7 +11,7 @@ RBXConnectionManager is a lightweight and efficient module for managing `RBXScri
 
 ## Features
 - **Efficient Connection Management**: Easily create, store, and disconnect connections by name.
-- **Automatic Cleanup**: Removes player-specific connections when a player leaves (server-side only).
+- **Automatic Cleanup**: Removes player-specific connections when a player leaves (server-side feature) -> the player's UserId must be in the connection name.
 - **Batch Disconnection**: Disconnect all connections or those within a specific group.
 - **Monitoring**: Logs and displays event calls along with timestamps.
 - **Self-Destruction**: Provides a method to completely clean up the manager.

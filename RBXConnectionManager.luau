@@ -4,19 +4,21 @@ local RBXConnectionManager = {}
 RBXConnectionManager.__index = RBXConnectionManager
 
 -- Constructor
-function RBXConnectionManager.new()
+function RBXConnectionManager.new(monitoring_checker_interval: number?)
 	local self = setmetatable({}, RBXConnectionManager)
 	self._connections = {} :: { [string]: RBXScriptConnection }
+	self._internal_connections = {} :: { RBXScriptConnection }
 	self._monitoring = {} :: { [string]: any }
 
-	-- Cleanup player-specific connections (only for ServerSide)
-	if RunService:isServer() then
-		Players.PlayerRemoving:Connect(function(playerObj: Player)
+	-- Cleanup player-specific connections (server-side feature)
+	if RunService:IsServer() then
+		local globalPlayersRemovingConnection = Players.PlayerRemoving:Connect(function(playerObj: Player)
 			self:DisconnectAllInGroup(tostring(playerObj.UserId))
 		end)
+		table.insert(self._internal_connections, globalPlayersRemovingConnection)
 	end
 
-	self:StartMonitoring()
+	self:StartMonitoring(monitoring_checker_interval)
 
 	return self
 end
@@ -85,6 +87,14 @@ end
 
 -- Self-destruct
 function RBXConnectionManager:Destroy()
+	-- Disconnect the module's internal connections
+	for _, connection in pairs(self._internal_connections) do
+		if connection.Connected then
+			connection:Disconnect()
+		end
+	end
+	self._internal_connections = {}
+
 	self:DisconnectAll()
 	setmetatable(self, nil)
 end
