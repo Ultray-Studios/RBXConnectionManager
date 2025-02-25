@@ -4,11 +4,12 @@ local RBXConnectionManager = {}
 RBXConnectionManager.__index = RBXConnectionManager
 
 -- Constructor
-function RBXConnectionManager.new(monitoring_checker_interval: number?)
+function RBXConnectionManager.new(monitoring_checker_interval: number?, osdate_format: string?)
 	local self = setmetatable({}, RBXConnectionManager)
 	self._connections = {} :: { [string]: RBXScriptConnection }
 	self._internal_connections = {} :: { RBXScriptConnection }
 	self._monitoring = {} :: { [string]: any }
+	self._osdate_format = osdate_format or "%Y-%m-%d %H:%M:%S"
 
 	-- Cleanup player-specific connections (server-side feature)
 	if RunService:IsServer() then
@@ -36,9 +37,9 @@ function RBXConnectionManager:Connect(name: string, event, callback, monitoring:
 		self._monitoring[name] = {}
 		local original_callback = callback
 		callback = function(...)
-			-- Log the data with correct time format
+			-- Log the data with date time format
 			table.insert(self._monitoring[name], {
-				date = os.date("%Y-%m-%d %H:%M:%S"),
+				date_time = os.date(self._osdate_format),
 				arguments = { ... },
 			})
 
