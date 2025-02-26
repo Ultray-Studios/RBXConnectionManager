@@ -3,13 +3,14 @@ local RunService = game:GetService("RunService")
 local RBXConnectionManager = {}
 RBXConnectionManager.__index = RBXConnectionManager
 
--- Constructor
+-- Constructor --
 function RBXConnectionManager.new(monitoring_checker_interval: number?, osdate_format: string?)
 	local self = setmetatable({}, RBXConnectionManager)
 	self._connections = {} :: { [string]: RBXScriptConnection }
 	self._internal_connections = {} :: { RBXScriptConnection }
 	self._monitoring = {} :: { [string]: any }
 	self._osdate_format = osdate_format or "%Y-%m-%d %H:%M:%S"
+	self._threads = {["auto_disconnect"] = {}}
 
 	-- Cleanup player-specific connections (server-side feature)
 	if RunService:IsServer() then
@@ -19,10 +20,28 @@ function RBXConnectionManager.new(monitoring_checker_interval: number?, osdate_f
 		table.insert(self._internal_connections, globalPlayersRemovingConnection)
 	end
 
-	self:StartMonitoring(monitoring_checker_interval)
+	self:_StartMonitoring(monitoring_checker_interval)
 
 	return self
 end
+
+-- Methods to change settings --
+function RBXConnectionManager:ChangeMonitoringCheckInterval(new_interval: number)
+	self:_StartMonitoring(new_interval)
+end
+
+function RBXConnectionManager:ChangeOsDateFormat(new_osdate_format: string)
+	self._osdate_format = new_osdate_format
+end
+
+function RBXConnectionManager:AddAutoDisconnect(group_name: string, event: RBXScriptSignal)
+	self._threads["auto_disconnect"][group_name] = {}
+	self._threads["auto_disconnect"][group_name]["event"] = event:Connect(function()
+		self:DisconnectAllInGroup(group_name)
+	end)
+end
+
+-- Action Methods --
 
 -- Add a connection
 function RBXConnectionManager:Connect(name: string, event: RBXScriptSignal, callback, monitoring: boolean?): RBXScriptConnection
@@ -118,12 +137,15 @@ function RBXConnectionManager:GetAllMonitoringData()
 end
 
 -- Will show up new monitoring results when collected
-function RBXConnectionManager:StartMonitoring(checker_interval: number?)
-	task.spawn(function()
+function RBXConnectionManager:_StartMonitoring(checker_interval: number?)
+	if self._threads["monitoring"] ~= nil then
+		task.cancel(self._threads["monitoring"])
+	end
+	self._threads["monitoring"] = task.spawn(function()
 		-- Store latest known logs for each connection
 		local last_log_counts = {}
 
-		while task.wait(checker_interval or 1) do
+		while true do
 			for connection_name, monitoring_data in pairs(self._monitoring) do
 				-- Check if monitoring is enabled for this connection
 				if type(monitoring_data) == "table" then
@@ -150,6 +172,7 @@ function RBXConnectionManager:StartMonitoring(checker_interval: number?)
 					end
 				end
 			end
+			task.wait(checker_interval or 1)
 		end
 	end)
 end
