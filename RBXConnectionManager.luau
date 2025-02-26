@@ -10,7 +10,7 @@ function RBXConnectionManager.new(monitoring_checker_interval: number?, osdate_f
 	self._internal_connections = {} :: { RBXScriptConnection }
 	self._monitoring = {} :: { [string]: any }
 	self._osdate_format = osdate_format or "%Y-%m-%d %H:%M:%S"
-	self._threads = {["auto_disconnect"] = {}}
+	self._threads = { ["auto_disconnect"] = {} }
 
 	-- Cleanup player-specific connections (server-side feature)
 	if RunService:IsServer() then
@@ -36,15 +36,23 @@ end
 
 function RBXConnectionManager:AddAutoDisconnect(group_name: string, event: RBXScriptSignal)
 	self._threads["auto_disconnect"][group_name] = {}
-	self._threads["auto_disconnect"][group_name]["event"] = event:Connect(function()
-		self:DisconnectAllInGroup(group_name)
-	end)
+	table.insert(
+		self._threads["auto_disconnect"][group_name],
+		event:Connect(function()
+			self:DisconnectAllInGroup(group_name)
+		end)
+	)
 end
 
 -- Action Methods --
 
 -- Add a connection
-function RBXConnectionManager:Connect(name: string, event: RBXScriptSignal, callback, monitoring: boolean?): RBXScriptConnection
+function RBXConnectionManager:Connect(
+	name: string,
+	event: RBXScriptSignal,
+	callback,
+	monitoring: boolean?
+): RBXScriptConnection
 	if self._connections[name] then
 		-- Disconnect and replace the existing connection
 		self:Disconnect(name)
