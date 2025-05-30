@@ -69,6 +69,12 @@ This will also disconnect all existing connections (like connectionManager:Disco
 connectionManager:Destroy()
 ```
 
+### Using AutoDisconnect
+This will disconnect all connections in group (group_name, like connectionManager:DisconnectAllInGroup) when an RBXScriptConnection (event) is fired
+```lua
+connectionManager:AddAutoDisconnect(group_name, event)
+```
+
 ---
 
 ### Basic Example (Server-side Car Show Handler)
