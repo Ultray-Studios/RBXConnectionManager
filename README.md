@@ -2,9 +2,9 @@
 
 This is our first open-source release. Please add a ⭐ if you like the idea of this project or if you like to use it.
 
-Consider joining our community aswell! https://discord.gg/8ed3W53kHv/ to see progress on our very advanced projects and enjoy early-access benefits while you still can!
+Roblox Developer Forum Thread: https://devforum.roblox.com/t/3503750
 
-DevForum Post: https://devforum.roblox.com/t/3503750
+Consider joining our community aswell! https://discord.gg/8ed3W53kHv/ to see progress on our very advanced projects and enjoy early-access benefits while you still can!
 
 ## Overview
 RBXConnectionManager is a lightweight and efficient module for managing `RBXScriptConnection` objects in Roblox. It allows for easy connection handling, automatic cleanup, and optional event monitoring.
@@ -67,6 +67,12 @@ connectionManager:GetAllMonitoringData()
 This will also disconnect all existing connections (like connectionManager:DisconnectAll() does)
 ```lua
 connectionManager:Destroy()
+```
+
+### Using AutoDisconnect
+This will disconnect all connections in group (group_name, like connectionManager:DisconnectAllInGroup) when an RBXScriptConnection (event) is fired
+```lua
+connectionManager:AddAutoDisconnect(group_name, event)
 ```
 
 ---
